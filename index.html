@@ -1,65 +1,482 @@
-<!-- FILE NAME: index.html -->
+html
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Springfield High School - Home</title>
+    <title>Click the Target Game - With Leaderboard</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; background-color: #f4f4f4; color: #333; }
-        header { background-color: #005A9C; color: white; padding: 1rem 0; text-align: center; }
-        header h1 { margin: 0; }
-        nav { background-color: #333; overflow: hidden; }
-        nav a { float: left; display: block; color: white; text-align: center; padding: 14px 20px; text-decoration: none; }
-        nav a:hover { background-color: #ddd; color: black; }
-        nav a.active { background-color: #005A9C; } /* Style for the current page link */
-        .container { padding: 20px; }
-        .welcome { background-color: white; padding: 20px; margin-bottom: 20px; text-align: center; }
-        .welcome img { max-width: 100%; height: auto; margin-top: 15px; }
-        .columns { display: flex; gap: 20px; }
-        .column { background-color: white; padding: 20px; flex: 1; }
-        footer { background-color: #333; color: white; text-align: center; padding: 10px 0; margin-top: 20px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .game-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            flex: 1;
+            min-width: 300px;
+            max-width: 600px;
+        }
+
+        .leaderboard-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 350px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #555;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .player-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #player-name {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 200px;
+            margin-right: 10px;
+        }
+
+        .set-name-btn {
+            padding: 10px 20px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .set-name-btn:hover {
+            background-color: #5a67d8;
+        }
+
+        .current-player {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            flex: 1;
+            margin: 0 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        #game-container {
+            width: 100%;
+            height: 400px;
+            background: #f8f9fa;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        #target {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #ff6b6b, #ee5a24);
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(238, 90, 36, 0.4);
+            transition: transform 0.1s;
+        }
+
+        #target:hover {
+            transform: scale(1.1);
+        }
+
+        #target.clicked {
+            animation: pulse 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .control-buttons {
+            text-align: center;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+        }
+
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .leaderboard-entry:hover {
+            background: #e9ecef;
+        }
+
+        .rank {
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .gold { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .silver { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .bronze { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        .player-name {
+            flex: 1;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+
+        .player-score {
+            font-weight: bold;
+            font-size: 18px;
+            color: #667eea;
+        }
+
+        .no-scores {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+        }
+
+        .clear-btn {
+            background: #dc3545;
+            font-size: 14px;
+            padding: 8px 15px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .clear-btn:hover {
+            background: #c82333;
+        }
     </style>
 </head>
 <body>
+    <div class="main-container">
+        <div class="game-section">
+            <h1>🎯 Click the Target Game</h1>
+            
+            <div class="player-info">
+                <input type="text" id="player-name" placeholder="Enter your name" maxlength="20">
+                <button class="set-name-btn" onclick="setPlayerName()">Set Name</button>
+                <div class="current-player" id="current-player">Player: Guest</div>
+            </div>
 
-    <header>
-        <h1>Oxford Public School</h1>
-        <p>Home of the Fighting Atoms</p>
-    </header>
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-label">SCORE</div>
+                    <div class="stat-value" id="score">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">TIME</div>
+                    <div class="stat-value" id="timer">30</div>
+                </div>
+            </div>
 
-    <!-- Navigation Bar for the Homepage -->
-    <nav>
-        <a href="index.html" class="active">Home</a>
-        <a href="#about">About Us</a>
-        <a href="gallery.html">Picture Album</a>
-        <a href="#contact">Contact</a>
-    </nav>
+            <div id="game-container">
+                <div id="target"></div>
+            </div>
 
-    <div class="container">
-        <!-- Welcome Section -->
-        <section class="welcome">
-            <h2>Welcome to Our School!</h2>
-            <p>Your journey to excellence starts here. Explore our website to learn more about our programs, staff, and community.</p>
-            <img src="https://placehold.co/800x300" alt="A picture of the school campus">
-        </section>
+            <div class="control-buttons">
+                <button id="start-btn" onclick="startGame()">Start Game</button>
+                <button id="reset-btn" onclick="resetGame()">Reset</button>
+            </div>
+        </div>
 
-        <!-- News and Events Section -->
-        <div class="columns">
-            <section class="column">
-                <h3>Latest News</h3>
-                <p>Science Fair winners announced! Congratulations to our future innovators.</p>
-            </section>
-            <section class="column">
-                <h3>Upcoming Events</h3>
-                <p>Parent-Teacher Conferences will be held on October 25th.</p>
-            </section>
+        <div class="leaderboard-section">
+            <h2>🏆 Top 10 Leaderboard</h2>
+            <div id="leaderboard" class="leaderboard-table"></div>
+            <button class="clear-btn" onclick="clearLeaderboard()">Clear All Scores</button>
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2023 Springfield High School. All Rights Reserved.</p>
-    </footer>
+    <script>
+        // Game variables
+        const target = document.getElementById('target');
+        const scoreDisplay = document.getElementById('score');
+        const timerDisplay = document.getElementById('timer');
+        const startBtn = document.getElementById('start-btn');
+        const gameContainer = document.getElementById('game-container');
+        const leaderboardDiv = document.getElementById('leaderboard');
+        const playerNameInput = document.getElementById('player-name');
+        const currentPlayerDiv = document.getElementById('current-player');
 
+        let score = 0;
+        let timeLeft = 30;
+        let gameActive = false;
+        let timer;
+        let currentPlayerName = 'Guest';
+        let moveInterval;
+
+        // Initialize leaderboard from localStorage
+        let leaderboard = JSON.parse(localStorage.getItem('targetGameLeaderboard')) || [];
+
+        // Set player name
+        function setPlayerName() {
+            const name = playerNameInput.value.trim();
+            if (name) {
+                currentPlayerName = name;
+                currentPlayerDiv.textContent = `Player: ${currentPlayerName}`;
+                playerNameInput.value = '';
+            } else {
+                alert('Please enter a valid name!');
+            }
+        }
+
+        // Move target to random position
+        function moveTarget() {
+            if (!gameActive) return;
+
+            const containerWidth = gameContainer.offsetWidth;
+            const containerHeight = gameContainer.offsetHeight;
+            const targetWidth = target.offsetWidth;
+            const targetHeight = target.offsetHeight;
+
+            const maxX = containerWidth - targetWidth;
+            const maxY = containerHeight - targetHeight;
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            target.style.left = randomX + 'px';
+            target.style.top = randomY + 'px';
+        }
+
+        // Start game
+        function startGame() {
+            if (currentPlayerName === 'Guest') {
+                alert('Please set your name before starting!');
+                return;
+            }
+
+            score = 0;
+            timeLeft = 30;
+            gameActive = true;
+
+            scoreDisplay.textContent = score;
+            timerDisplay.textContent = timeLeft;
+
+            startBtn.disabled = true;
+            target.style.display = 'block';
+            moveTarget();
+
+            // Move target every 1.5 seconds automatically
+            moveInterval = setInterval(moveTarget, 1500);
+
+            // Start countdown timer
+            timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // End game
+        function endGame() {
+            gameActive = false;
+            clearInterval(timer);
+            clearInterval(moveInterval);
+            startBtn.disabled = false;
+            target.style.display = 'none';
+
+            // Save score to leaderboard
+            saveScore(currentPlayerName, score);
+            
+            alert(`Game Over!\nPlayer: ${currentPlayerName}\nScore: ${score}`);
+        }
+
+        // Save score to leaderboard
+        function saveScore(name, playerScore) {
+            const newEntry = {
+                name: name,
+                score: playerScore,
+                date: new Date().toLocaleDateString()
+            };
+
+            leaderboard.push(newEntry);
+            
+            // Sort by score (highest first) and keep only top 10
+            leaderboard.sort((a, b) => b.score - a.score);
+            leaderboard = leaderboard.slice(0, 10);
+
+            // Save to localStorage
+            localStorage.setItem('targetGameLeaderboard', JSON.stringify(leaderboard));
+            
+            updateLeaderboardDisplay();
+        }
+
+        // Update leaderboard display
+        function updateLeaderboardDisplay() {
+            if (leaderboard.length === 0) {
+                leaderboardDiv.innerHTML = '<div class="no-scores">No scores yet. Be the first!</div>';
+                return;
+            }
+
+            let html = '';
+            leaderboard.forEach((entry, index) => {
+                let rankClass = '';
+                if (index === 0) rankClass = 'gold';
+                else if (index === 1) rankClass = 'silver';
+                else if (index === 2) rankClass = 'bronze';
+
+                html += `
+                    <div class="leaderboard-entry">
+                        <div class="rank ${rankClass}">${index + 1}</div>
+                        <div class="player-name">${entry.name}</div>
+                        <div class="player-score">${entry.score}</div>
+                    </div>
+                `;
+            });
+
+            leaderboardDiv.innerHTML = html;
+        }
+
+        // Clear leaderboard
+        function clearLeaderboard() {
+            if (confirm('Are you sure you want to clear all scores?')) {
+                leaderboard = [];
+                localStorage.removeItem('targetGameLeaderboard');
+                updateLeaderboardDisplay();
+            }
+        }
+
+        // Reset game
+        function resetGame() {
+            gameActive = false;
+            clearInterval(timer);
+            clearInterval(moveInterval);
+            score = 0;
+            timeLeft = 30;
+            scoreDisplay.textContent = score;
+            timerDisplay.textContent = timeLeft;
+            startBtn.disabled = false;
+            target.style.display = 'none';
+        }
+
+        // Handle target click
+        target.addEventListener('click', () => {
+            if (!gameActive) return;
+
+            score++;
+            scoreDisplay.textContent = score;
+            target.classList.add('clicked');
+            
+            setTimeout(() => {
+                target.classList.remove('clicked');
+            }, 300);
+
+            moveTarget();
+        });
+
+        // Initialize display
+        updateLeaderboardDisplay();
+        target.style.display = 'none';
+
+        // Allow Enter key to set name
+        playerNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                setPlayerName();
+            }
+        });
+    </script>
 </body>
 </html>
+
+
